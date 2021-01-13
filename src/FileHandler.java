@@ -14,10 +14,19 @@
  *  Github project home page: https://github.com/daylamtayari/M3U8-Downloader
  */
 
+import lombok.Cleanup;
+import org.apache.commons.io.IOUtils;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.NavigableMap;
 
 /**
  * This method handles all file methods which
@@ -39,5 +48,35 @@ public class FileHandler {
         catch(IOException ignored){}
         File tempDir=new File(String.valueOf(TEMP_FOLDER_PATH));
         tempDir.deleteOnExit();     //Delete folder when exiting the program.
+    }
+
+    /**
+     * This file merges all of the downloaded segment
+     * files of the M3U8 playlist into a single file.
+     * @param segmentMap    Navigable map containing the index and file objects of all the downloaded segment files.
+     * @param fp            String value representing the file path of the output file.
+     */
+    protected static void mergeFile(NavigableMap<Integer, File> segmentMap, String fp){
+        File output=new File(fp);
+        segmentMap.forEach((key, segment) ->{
+            try{
+                fileMerger(segment, output);
+            }
+            catch(IOException ignored){}
+        });
+    }
+
+    /**
+     * This method merges two files together.
+     * @param input     File object representing the file to be merged.
+     * @param output    File object representing the file to be merged into.
+     * @throws IOException
+     */
+    protected static void fileMerger(File input, File output) throws IOException{
+        @Cleanup OutputStream os=new BufferedOutputStream(new FileOutputStream(output, true));
+        @Cleanup InputStream is=new BufferedInputStream(new FileInputStream(input));
+        IOUtils.copy(is, os);
+        is.close();
+        os.close();
     }
 }
