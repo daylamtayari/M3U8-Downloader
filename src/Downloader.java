@@ -36,7 +36,6 @@ public class Downloader {
     private static final int MAX_TRIES=5;       //Constant variable which represents the maximum amount of tries for the downloading of an individual file.
     private static final int TIMEOUT=60000;     //Constant variable representing the duration in milliseconds that the program has to try downloading a file before timing out.
     private static final int THREAD_COUNT=100;  //Constant variable representing the amount of threads used for the downloading of individual files.
-    private static String TEMP_FOLDER_PATH;     //String value representing the absolute file path of the temporary folder.
 
     /**
      * Method which creates and downloads a temporary file.
@@ -63,11 +62,11 @@ public class Downloader {
         File downloadFile;
         prefix+="-";
         String suffix="."+FilenameUtils.getExtension(dURL.getPath());
-        if(TEMP_FOLDER_PATH==null){     //Creates the temporary file if the temp folder has not been created yet.
+        if(FileHandler.TEMP_FOLDER_PATH==null){     //Creates the temporary file if the temp folder has not been created yet.
             downloadFile=File.createTempFile(prefix, suffix);
         }
         else{
-            downloadFile=File.createTempFile(prefix, suffix, new File(TEMP_FOLDER_PATH+File.separator));
+            downloadFile=File.createTempFile(prefix, suffix, new File(FileHandler.TEMP_FOLDER_PATH+File.separator));
         }
         downloadFile.deleteOnExit();    //Delete the file when the program exits.
         FileUtils.copyURLToFile(dURL, downloadFile, TIMEOUT, TIMEOUT);      //Downloads the contents of the URL to the file we just made.
