@@ -48,7 +48,6 @@ public class Main {
         String name=sc.next();
         String fp=folder+name+".ts";
         sc.close();
-        //TODO: Add downloader method call.
         FileHandler.createTempFolder();
         ArrayList<String> chunks=null;
         try {
