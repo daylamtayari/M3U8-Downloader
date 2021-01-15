@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -119,5 +120,29 @@ public class Downloader {
             Thread.currentThread().interrupt();
         }
         return segmentMap;
+    }
+
+    /**
+     * Method which retrieves all of chunks from
+     * an M3U8 playlist file.
+     * @param url                   String value representing the URL of the M3U8 file.
+     * @return ArrayList<String>    String arraylist containing all of the M3U8 chunks from the playlist file.
+     * @throws IOException
+     */
+    protected static ArrayList<String> getChunks(String url) throws IOException {
+        ArrayList<String> chunks=new ArrayList<String>();       //Contain all of the TS chunks
+        String baseURL=url.substring(0, url.lastIndexOf("index-dvr.m3u8"));
+        File m3u8File= tempDownload(url);
+        Scanner sc=new Scanner(m3u8File);
+        String line;
+        //Read through the contents of the file and adds every line that isn't a comment to the chunks arraylist:
+        while(sc.hasNextLine()){
+            line=sc.nextLine();
+            if(!line.startsWith("#")){
+                chunks.add(baseURL+line);
+            }
+        }
+        sc.close();
+        return chunks;
     }
 }
