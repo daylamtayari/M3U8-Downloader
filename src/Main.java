@@ -14,6 +14,10 @@
  *  Github project home page: https://github.com/daylamtayari/M3U8-Downloader
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.NavigableMap;
 import java.util.Scanner;
 
 /**
@@ -45,6 +49,14 @@ public class Main {
         String fp=folder+name+".ts";
         sc.close();
         //TODO: Add downloader method call.
+        FileHandler.createTempFolder();
+        ArrayList<String> chunks=null;
+        try {
+            chunks=Downloader.getChunks(url);
+        }
+        catch(IOException e) {}
+        NavigableMap<Integer, File> segmentMap=Downloader.TSDownload(chunks);
+        FileHandler.mergeFile(segmentMap, fp);
         System.out.print(
                   "\nDownload complete!"
                 + "\nFile downloaded at: "+fp
