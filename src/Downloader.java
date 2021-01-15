@@ -131,7 +131,7 @@ public class Downloader {
      */
     protected static ArrayList<String> getChunks(String url) throws IOException {
         ArrayList<String> chunks=new ArrayList<String>();       //Contain all of the TS chunks
-        String baseURL=url.substring(0, url.lastIndexOf("index-dvr.m3u8"));
+        String baseURL=url.substring(0, url.lastIndexOf("/")+1);
         File m3u8File= tempDownload(url);
         Scanner sc=new Scanner(m3u8File);
         String line;
